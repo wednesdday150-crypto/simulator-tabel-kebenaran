@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulator Tabel Kebenaran & Verifikator Argumen</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#1b2430;--mut:#5d6b7a;--bd:#d5dbe3;--ac:#1f5fbf;--ok:#17803d;--no:#c0392b;--wa:#a35f00;--tf:#e7f5ec;--ff:#fbeaea;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161c;--card:#1a2029;--tx:#e8edf3;--mut:#9aa7b5;--bd:#2f3a47;--ac:#6ea8fe;--ok:#4cc27a;--no:#ff7b6b;--wa:#f0b04a;--tf:#16301f;--ff:#3a1d1d}}
+:root[data-theme="dark"]{--bg:#12161c;--card:#1a2029;--tx:#e8edf3;--mut:#9aa7b5;--bd:#2f3a47;--ac:#6ea8fe;--ok:#4cc27a;--no:#ff7b6b;--wa:#f0b04a;--tf:#16301f;--ff:#3a1d1d}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px}
+h1{font-size:1.3rem;margin:.2rem 0}
+p.sub{color:var(--mut);margin:0 0 14px;font-size:.92rem}
+.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tabs button{flex:1;min-width:110px;padding:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font:inherit;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ac);color:#fff;border-color:var(--ac)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px}
+label{display:block;font-weight:600;margin-bottom:6px;font-size:.92rem}
+input[type=text]{width:100%;padding:11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:1rem ui-monospace,Menlo,Consolas,monospace}
+.row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.go{padding:10px 18px;border:0;border-radius:8px;background:var(--ac);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.ex{padding:6px 10px;border:1px solid var(--bd);border-radius:999px;background:transparent;color:var(--mut);font:.82rem ui-monospace,Menlo,monospace;cursor:pointer}
+.wrap{overflow-x:auto;margin-top:14px}
+table{border-collapse:collapse;width:100%;font:.88rem ui-monospace,Menlo,Consolas,monospace}
+th,td{border:1px solid var(--bd);padding:6px 10px;text-align:center;white-space:nowrap}
+th{background:var(--bg)}
+td.t{background:var(--tf);color:var(--ok);font-weight:700}
+td.f{background:var(--ff);color:var(--no);font-weight:700}
+td.cx{outline:2px solid var(--wa);outline-offset:-2px}
+.res{margin-top:12px;padding:10px 12px;border-radius:8px;font-weight:700;border:1px solid var(--bd)}
+.res.ok{color:var(--ok)}.res.no{color:var(--no)}.res.wa{color:var(--wa)}
+.err{color:var(--no);margin-top:10px;font-weight:600}
+.help{margin-top:14px;font-size:.85rem;color:var(--mut)}
+.help code{font-family:ui-monospace,Menlo,monospace;color:var(--tx)}
+.hide{display:none}
+</style>
+</head>
+<body>
+<main>
+<h1>Simulator Tabel Kebenaran & Verifikator Argumen</h1>
+<p class="sub">PJBL-1 Matematika Diskrit — Ilmu Komputer, UBBG</p>
+
+<div class="tabs" role="tablist">
+<button role="tab" aria-selected="true" data-t="tt">Tabel kebenaran</button>
+<button role="tab" aria-selected="false" data-t="ar">Verifikasi argumen</button>
+<button role="tab" aria-selected="false" data-t="eq">Ekuivalensi</button>
+</div>
+
+<section id="tt" class="card">
+<label for="i1">Ekspresi logika</label>
+<input type="text" id="i1" value="(p -> q) & p -> q" autocomplete="off" autocapitalize="off" spellcheck="false">
+<div class="row"><button class="go" id="g1">Hitung</button>
+<button class="ex" data-for="i1" data-v="p | ~p">p | ~p</button>
+<button class="ex" data-for="i1" data-v="p & ~p">p & ~p</button>
+<button class="ex" data-for="i1" data-v="(p & q) -> r">(p & q) -> r</button></div>
+<div id="o1"></div>
+</section>
+
+<section id="ar" class="card hide">
+<label for="i2">Argumen (premis dipisah ; lalu |= konklusi)</label>
+<input type="text" id="i2" value="p -> q; p |= q" autocomplete="off" autocapitalize="off" spellcheck="false">
+<div class="row"><button class="go" id="g2">Verifikasi</button>
+<button class="ex" data-for="i2" data-v="p -> q; ~q |= ~p">modus tollens</button>
+<button class="ex" data-for="i2" data-v="p -> q; q |= p">menegaskan konsekuen</button>
+<button class="ex" data-for="i2" data-v="p | q; ~p |= q">silogisme disjungtif</button></div>
+<div id="o2"></div>
+</section>
+
+<section id="eq" class="card hide">
+<label for="i3">Ekspresi A</label>
+<input type="text" id="i3" value="~(p & q)" autocomplete="off" autocapitalize="off" spellcheck="false">
+<label for="i4" style="margin-top:10px">Ekspresi B</label>
+<input type="text" id="i4" value="~p | ~q" autocomplete="off" autocapitalize="off" spellcheck="false">
+<div class="row"><button class="go" id="g3">Bandingkan</button></div>
+<div id="o3"></div>
+</section>
+
+<p class="help">Operator: <code>~ ! NOT</code> &nbsp; <code>&amp; AND</code> &nbsp; <code>| OR</code> &nbsp; <code>XOR</code> &nbsp; <code>-&gt; IMPLIES</code> &nbsp; <code>&lt;-&gt; IFF</code> &nbsp; <code>TRUE FALSE</code>.
+Prioritas: NOT &gt; AND &gt; OR/XOR &gt; -&gt; &gt; &lt;-&gt;. Variabel bebas nama, mis. <code>p</code>, <code>hujan</code>.</p>
+</main>
+
+<script>
+"use strict";
+const KW={NOT:"NOT",AND:"AND",OR:"OR",XOR:"XOR",IMPLIES:"IMP",IFF:"IFF",TRUE:"TRUE",FALSE:"FALSE"};
+const SYM=[["<->","IFF"],["<=>","IFF"],["↔","IFF"],["->","IMP"],["=>","IMP"],["→","IMP"],["~","NOT"],["!","NOT"],["¬","NOT"],["&","AND"],["∧","AND"],["|","OR"],["∨","OR"],["⊕","XOR"],["(","LP"],[")","RP"]];
+class LogicError extends Error{}
+function tokenize(s){
+  const t=[];let i=0;
+  while(i<s.length){
+    if(/\s/.test(s[i])){i++;continue}
+    const m=SYM.find(([x])=>s.startsWith(x,i));
+    if(m){t.push([m[1],m[0]]);i+=m[0].length;continue}
+    const w=/^[A-Za-z_][A-Za-z0-9_]*/.exec(s.slice(i));
+    if(!w)throw new LogicError("Karakter tidak dikenal '"+s[i]+"' pada posisi "+(i+1));
+    const k=KW[w[0].toUpperCase()];
+    t.push([k||"VAR",w[0]]);i+=w[0].length;
+  }
+  return t;
+}
+function parse(text){
+  const t=tokenize(text);let i=0;
+  const pk=()=>i<t.length?t[i][0]:null;
+  const eat=k=>{if(i>=t.length)throw new LogicError("Ekspresi berakhir tiba-tiba");
+    if(k&&t[i][0]!==k)throw new LogicError("Diharapkan "+k+", ditemukan '"+t[i][1]+"'");return t[i++]};
+  const iff=()=>{let n=imp();while(pk()==="IFF"){eat();n=["IFF",n,imp()]}return n};
+  const imp=()=>{const l=or();if(pk()==="IMP"){eat();return["IMP",l,imp()]}return l};
+  const or=()=>{let n=and();while(pk()==="OR"||pk()==="XOR"){const o=eat()[0];n=[o,n,and()]}return n};
+  const and=()=>{let n=not();while(pk()==="AND"){eat();n=["AND",n,not()]}return n};
+  const not=()=>{if(pk()==="NOT"){eat();return["NOT",not()]}return atom()};
+  const atom=()=>{const k=pk();
+    if(k==="VAR")return["VAR",eat()[1]];
+    if(k==="TRUE"||k==="FALSE"){eat();return["CONST",k==="TRUE"]}
+    if(k==="LP"){eat();const n=iff();eat("RP");return n}
+    throw new LogicError("Operand tidak ditemukan (variabel atau tanda kurung)")};
+  if(!t.length)throw new LogicError("Ekspresi kosong");
+  const n=iff();
+  if(i!==t.length)throw new LogicError("Token berlebih: '"+t[i][1]+"'");
+  return n;
+}
+function ev(n,e){
+  switch(n[0]){
+    case"VAR":return e[n[1]];case"CONST":return n[1];case"NOT":return!ev(n[1],e);
+  }
+  const a=ev(n[1],e),b=ev(n[2],e);
+  return{AND:a&&b,OR:a||b,XOR:a!==b,IMP:!a||b,IFF:a===b}[n[0]];
+}
+function vars(n,a=[]){
+  if(n[0]==="VAR"){if(!a.includes(n[1]))a.push(n[1])}
+  else if(n[0]!=="CONST")n.slice(1).forEach(c=>vars(c,a));
+  return a;
+}
+function str(n){
+  if(n[0]==="VAR")return n[1];if(n[0]==="CONST")return n[1]?"T":"F";
+  if(n[0]==="NOT")return"~"+str(n[1]);
+  const s={AND:"&",OR:"|",XOR:"XOR",IMP:"->",IFF:"<->"}[n[0]];
+  return"("+str(n[1])+" "+s+" "+str(n[2])+")";
+}
+function subs(n,a=[]){
+  if(n[0]==="VAR"||n[0]==="CONST")return a;
+  n.slice(1).forEach(c=>subs(c,a));
+  if(!a.some(x=>str(x)===str(n)))a.push(n);
+  return a;
+}
+function* assigns(names){
+  const N=names.length;
+  for(let k=0;k<(1<<N);k++){const e={};names.forEach((v,j)=>e[v]=!((k>>(N-1-j))&1));yield e}
+}
+const uniq=a=>[...new Set(a)];
+function tableHTML(cols,rows,lastCol,cxRows){
+  let h='<div class="wrap"><table><thead><tr>'+cols.map(c=>"<th>"+esc(c)+"</th>").join("")+"</tr></thead><tbody>";
+  rows.forEach((r,ri)=>{h+="<tr>"+r.map((v,ci)=>'<td class="'+(v?"t":"f")+(cxRows&&cxRows.has(ri)?" cx":"")+'">'+(v?"T":"F")+"</td>").join("")+"</tr>"});
+  return h+"</tbody></table></div>";
+}
+function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+const out=(id,h)=>document.getElementById(id).innerHTML=h;
+const fail=(id,e)=>out(id,e instanceof LogicError?'<div class="err">Kesalahan: '+esc(e.message)+"</div>":'<div class="err">Terjadi kesalahan.</div>');
+
+function doTT(){
+  try{
+    const ast=parse(val("i1")),names=vars(ast),sf=subs(ast),cols=names.concat((sf.length?sf:[ast]).map(str));
+    const rows=[],res=[];
+    for(const e of assigns(names)){
+      rows.push(names.map(n=>e[n]).concat((sf.length?sf:[ast]).map(s=>ev(s,e))));res.push(ev(ast,e));
+    }
+    const k=res.every(Boolean)?["Tautologi","ok"]:!res.some(Boolean)?["Kontradiksi","no"]:["Kontingensi","wa"];
+    out("o1",tableHTML(cols,rows)+'<div class="res '+k[1]+'">Klasifikasi: '+k[0]+"</div>");
+  }catch(e){fail("o1",e)}
+}
+function doAR(){
+  try{
+    const parts=val("i2").split(/\|=|∴|therefore/i);
+    if(parts.length!==2)throw new LogicError("Pisahkan premis dan konklusi dengan '|=' atau '∴' (tepat satu)");
+    const pr=parts[0].split(";").map(s=>s.trim()).filter(Boolean);
+    if(!pr.length)throw new LogicError("Argumen butuh minimal satu premis");
+    if(!parts[1].trim())throw new LogicError("Konklusi kosong");
+    const pa=pr.map(parse),ca=parse(parts[1]);
+    const names=uniq([].concat(...pa.map(a=>vars(a)),vars(ca)));
+    const cols=names.concat(pr,[parts[1].trim()]),rows=[],cx=new Set(),bad=[];
+    let ri=0;
+    for(const e of assigns(names)){
+      const pv=pa.map(a=>ev(a,e)),cv=ev(ca,e);
+      rows.push(names.map(n=>e[n]).concat(pv,[cv]));
+      if(pv.every(Boolean)&&!cv){cx.add(ri);bad.push(names.map(n=>n+"="+(e[n]?"T":"F")).join(", "))}
+      ri++;
+    }
+    const v=!bad.length;
+    out("o2",tableHTML(cols,rows,0,cx)+'<div class="res '+(v?"ok":"no")+'">'+(v?"ARGUMEN VALID — tidak ada baris dengan semua premis benar tetapi konklusi salah.":"ARGUMEN TIDAK VALID — contoh tandingan: "+esc(bad.join(" | "))+" (baris bergaris kuning)")+"</div>");
+  }catch(e){fail("o2",e)}
+}
+function doEQ(){
+  try{
+    const a=parse(val("i3")),b=parse(val("i4")),names=uniq(vars(a).concat(vars(b)));
+    let same=true,diff="";
+    for(const e of assigns(names))if(ev(a,e)!==ev(b,e)){same=false;diff=names.map(n=>n+"="+(e[n]?"T":"F")).join(", ");break}
+    out("o3",'<div class="res '+(same?"ok":"no")+'">'+(same?"EKUIVALEN — nilai keduanya sama di semua baris.":"TIDAK EKUIVALEN — berbeda pada "+esc(diff))+"</div>");
+  }catch(e){fail("o3",e)}
+}
+const val=id=>document.getElementById(id).value;
+document.getElementById("g1").onclick=doTT;
+document.getElementById("g2").onclick=doAR;
+document.getElementById("g3").onclick=doEQ;
+[["i1",doTT],["i2",doAR],["i3",doEQ],["i4",doEQ]].forEach(([id,f])=>document.getElementById(id).addEventListener("keydown",e=>{if(e.key==="Enter")f()}));
+document.querySelectorAll(".ex").forEach(b=>b.onclick=()=>{document.getElementById(b.dataset.for).value=b.dataset.v;(b.dataset.for==="i1"?doTT:doAR)()});
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll(".tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  ["tt","ar","eq"].forEach(id=>document.getElementById(id).classList.toggle("hide",id!==b.dataset.t));
+});
+doTT();doAR();doEQ();
+</script>
+</body>
+</html>
